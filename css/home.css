@@ -1,0 +1,489 @@
+/* ==========================================================================
+   Barracuda Holdings — home.css
+   Homepage-only styles: hero (video + SVG fallback), staggered hero reveal,
+   stats strip, capabilities, industries, certifications, CTA band.
+   Owner: Agent A. Loaded only by index.html.
+   ========================================================================== */
+
+/* ==========================================================================
+   HERO
+   Full-bleed background video with a dark overlay; asymmetric left-aligned
+   content sitting on a Swiss grid. SVG PCB-trace motif is the finished-looking
+   fallback when the video is absent.
+   ========================================================================== */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: min(88vh, 52rem);
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -3;
+  /* Match the fallback so a slow/absent video never flashes a bright frame. */
+  background: var(--bg);
+}
+
+/* Static fallback layer: solid bg + PCB-trace SVG, always painted behind video.
+   Looks intentional on its own; the video (if present) covers it. */
+.hero-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.hero-fallback svg {
+  position: absolute;
+  right: -6%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(70%, 46rem);
+  height: auto;
+  opacity: 0.55;
+}
+
+/* Dark overlay so headline contrast stays >= WCAG AA over any footage. */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      100deg,
+      rgba(11, 14, 18, 0.94) 0%,
+      rgba(11, 14, 18, 0.82) 42%,
+      rgba(11, 14, 18, 0.55) 78%,
+      rgba(11, 14, 18, 0.45) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(11, 14, 18, 0.9) 0%,
+      rgba(11, 14, 18, 0) 45%
+    );
+}
+
+.hero-inner {
+  width: 100%;
+  padding-block: clamp(4rem, 3rem + 6vw, 7.5rem);
+}
+
+.hero-content {
+  max-width: 52rem;
+}
+
+.hero-eyebrow {
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+  font-size: var(--text-hero);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.hero h1 .accent {
+  color: var(--accent);
+}
+
+.hero-sub {
+  margin-top: 1.5rem;
+  max-width: 40rem;
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+}
+
+.hero-actions {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Registration-mark spec tag pinned to the hero, engineering-drawing feel. */
+.hero-spec {
+  position: absolute;
+  right: clamp(1.25rem, 0.5rem + 3vw, 2.5rem);
+  top: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: right;
+  line-height: 1.8;
+}
+
+.hero-spec b {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .hero-spec {
+    display: none;
+  }
+}
+
+/* ---- Hero staggered entrance -------------------------------------------
+   Motion design (self-authored; Magic inspiration tool was unavailable):
+   each block rises + fades + un-masks with a clip-path wipe, expo-out easing,
+   ~90ms stagger. Runs once on load. Falls back to fully visible with JS off
+   or under reduced motion. */
+.hero-anim > * {
+  opacity: 1;
+}
+
+.js .hero-anim > * {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  clip-path: inset(0 0 100% 0);
+  animation: heroReveal 0.7s var(--ease-out) forwards;
+}
+
+.js .hero-anim > *:nth-child(1) { animation-delay: 0.05s; }
+.js .hero-anim > *:nth-child(2) { animation-delay: 0.14s; }
+.js .hero-anim > *:nth-child(3) { animation-delay: 0.23s; }
+.js .hero-anim > *:nth-child(4) { animation-delay: 0.32s; }
+
+@keyframes heroReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    clip-path: inset(0 0 -2% 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .hero-anim > * {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   STATS STRIP
+   Mono figures on a raised surface, split by hairline verticals.
+   ========================================================================== */
+.stats {
+  background: var(--surface);
+  border-block: 1px solid var(--line);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  padding-block: clamp(2.5rem, 2rem + 2vw, 4rem);
+}
+
+.stats-grid .stat {
+  padding-inline: clamp(1rem, 0.5rem + 2vw, 2rem);
+  border-left: 1px solid var(--line);
+}
+
+.stats-grid .stat:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+@media (max-width: 720px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 1rem + 3vw, 2.5rem);
+  }
+
+  .stats-grid .stat {
+    border-left: 0;
+    padding-inline: 0;
+  }
+
+  /* Keep a divider between the two columns for structure. */
+  .stats-grid .stat:nth-child(even) {
+    border-left: 1px solid var(--line);
+    padding-left: clamp(1rem, 0.5rem + 3vw, 2rem);
+  }
+}
+
+/* Narrow phones: the 6-digit placement figure would overrun a 2-col cell.
+   Let the value + unit wrap and dial the numeral size down so nothing spills. */
+@media (max-width: 480px) {
+  .stats-grid .stat-value {
+    font-size: clamp(1.6rem, 1rem + 5vw, 2.2rem);
+    overflow-wrap: anywhere;
+  }
+
+  .stats-grid .stat-value .stat-unit {
+    display: inline-block;
+  }
+}
+
+/* ==========================================================================
+   CAPABILITIES
+   Editorial list: index number + title + short spec line, hairline-ruled.
+   Not a uniform card grid.
+   ========================================================================== */
+.cap-list {
+  border-top: 1px solid var(--line);
+}
+
+.cap-item {
+  display: grid;
+  grid-template-columns: 4rem 1fr auto;
+  align-items: baseline;
+  gap: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  padding-block: clamp(1.5rem, 1rem + 1.5vw, 2.25rem);
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+a.cap-item:hover {
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  color: var(--text);
+}
+
+.cap-index {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+.cap-body h3 {
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+}
+
+.cap-body p {
+  margin-top: 0.4rem;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  max-width: 40rem;
+}
+
+.cap-arrow {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  align-self: center;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+a.cap-item:hover .cap-arrow {
+  color: var(--accent-bright);
+  transform: translateX(4px);
+}
+
+@media (max-width: 640px) {
+  .cap-item {
+    grid-template-columns: 2.5rem 1fr;
+    row-gap: 0.5rem;
+  }
+
+  .cap-arrow {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   INDUSTRIES
+   Asymmetric editorial: sticky lead column + flowing tag rail.
+   ========================================================================== */
+.industries-layout {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(2rem, 1rem + 4vw, 4.5rem);
+  align-items: start;
+}
+
+.industries-lead {
+  position: sticky;
+  top: 6rem;
+}
+
+.industries-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-content: flex-start;
+}
+
+.industry-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.industry-tag::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+
+.industry-tag:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 860px) {
+  .industries-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .industries-lead {
+    position: static;
+  }
+}
+
+/* ==========================================================================
+   CERTIFICATIONS STRIP
+   Four spec plates, mono labels, hairline-separated. No logo images.
+   ========================================================================== */
+.certs {
+  background: var(--surface);
+  border-block: 1px solid var(--line);
+}
+
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.cert-plate {
+  background: var(--surface);
+  padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.cert-plate:hover {
+  background: var(--surface-raised);
+}
+
+.cert-code {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.cert-desc {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .certs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 400px) {
+  .certs-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ==========================================================================
+   CTA BAND
+   Copper-edged panel with dimension-line motif.
+   ========================================================================== */
+.cta-band {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  padding: clamp(2.5rem, 2rem + 4vw, 5rem);
+  display: grid;
+  grid-template-columns: 1.4fr auto;
+  gap: clamp(1.5rem, 1rem + 3vw, 3rem);
+  align-items: center;
+}
+
+/* Copper edge accent on the left. */
+.cta-band::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+}
+
+.cta-band h2 {
+  font-size: var(--text-h2);
+}
+
+.cta-band p {
+  margin-top: 0.9rem;
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  max-width: 38rem;
+}
+
+.cta-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.cta-actions .btn {
+  justify-content: center;
+}
+
+.cta-callnote {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.cta-callnote a {
+  color: var(--text);
+}
+
+@media (max-width: 720px) {
+  .cta-band {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: left;
+  }
+}

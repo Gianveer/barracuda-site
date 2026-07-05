@@ -1,0 +1,28 @@
+:root {
+  --bg: #0B0E12;
+  --surface: #12171E;
+  --surface-raised: #1A2029;
+  --line: #232B36;
+  --line-strong: #33404E;
+  --text: #E9EDF1;
+  --text-muted: #94A0AC;
+  --accent: #D07A3F;
+  --accent-bright: #E89254;
+  --accent-ink: #10131A;
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Roboto Mono", Menlo, monospace;
+
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);
+  --text-lg: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+  --text-h2: clamp(1.75rem, 1.2rem + 2.2vw, 3rem);
+  --text-hero: clamp(2.5rem, 1.4rem + 5.2vw, 5.5rem);
+
+  --space-section: clamp(4.5rem, 3rem + 6vw, 9rem);
+  --container: 72rem;
+
+  --duration-fast: 160ms;
+  --duration-slow: 500ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
